@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Birthday, Mom!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top left, #ffe6f2, #fff0f5, #ffffff);
+      overflow: hidden;
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .card {
+      width: 90%;
+      max-width: 700px;
+      margin: 100px auto;
+      background: white;
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3.5em;
+      color: #d63384;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      background-color: #ff69b4;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.3em;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .button:hover {
+      transform: scale(1.1);
+    }
+
+    #letter {
+      display: none;
+      margin-top: 30px;
+      text-align: left;
+      font-size: 1.5em;
+      line-height: 1.8;
+      color: #444;
+      animation: fadeIn 2s forwards;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    .butterfly {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: url('https://i.imgur.com/QKpYwZp.png') no-repeat center center;
+      background-size: contain;
+      animation: fly 10s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translateY(100vh) translateX(0);
+      }
+      100% {
+        transform: translateY(-100vh) translateX(50vw);
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .signature {
+      text-align: right;
+      font-size: 1.3em;
+      margin-top: 30px;
+      color: #d63384;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Happy Birthday, Mom! 🎂</h1>
+  <button class="button" onclick="revealLetter()">Open Your Birthday Letter 💌</button>
+  <div id="letter">
+    <p>Dear Mom,</p>
+    <p>
+      On this special day, I just want to tell you how much you mean to me.  
+      Your love is the foundation that made me who I am.  
+      Every hug, every word, every sacrifice you've made—  
+      they’ve shaped my world in the most beautiful way.
+    </p>
+    <p>
+      I hope today brings you as much joy as you’ve brought into my life.  
+      You are my guiding light, my constant strength, and my biggest blessing.  
+      May your birthday be filled with peace, love, and endless happiness.
+    </p>
+    <p class="signature">With all my love,<br>Your Son 💖</p>
+  </div>
+</div>
+
+<!-- Sparkles -->
+<script>
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.top = Math.random() * 100 + 'vh';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    document.body.appendChild(s);
+  }
+</script>
+
+<!-- Confetti -->
+<canvas id="confetti"></canvas>
+<script>
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+
+  const confetti = Array.from({ length: 150 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 4 + 1,
+    d: Math.random() * 50,
+    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+  }));
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach(c => {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2, false);
+      ctx.fillStyle = c.color;
+      ctx.fill();
+    });
+    update();
+  }
+
+  function update() {
+    confetti.forEach(c => {
+      c.y += Math.cos(c.d) + 1 + c.r / 2;
+      c.x += Math.sin(0.01);
+      if (c.y > canvas.height) {
+        c.y = 0;
+        c.x = Math.random() * canvas.width;
+      }
+    });
+  }
+
+  setInterval(drawConfetti, 30);
+</script>
+
+<!-- Butterflies -->
+<script>
+  function revealLetter() {
+    document.getElementById('letter').style.display = 'block';
+
+    // Release butterflies
+    for (let i = 0; i < 12; i++) {
+      const b = document.createElement('div');
+      b.className = 'butterfly';
+      b.style.left = Math.random() * window.innerWidth + 'px';
+      b.style.top = window.innerHeight + 'px';
+      b.style.animationDuration = (6 + Math.random() * 5) + 's';
+      document.body.appendChild(b);
+      setTimeout(() => b.remove(), 10000);
+    }
+  }
+</script>
+
+</body>
+</html>
