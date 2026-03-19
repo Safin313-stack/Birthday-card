@@ -63,25 +63,58 @@
       to {opacity: 1;}
     }
 
+    /* ── CSS-only butterfly ── */
     .butterfly {
-      position: absolute;
-      width: 40px;
+      position: fixed;
+      width: 50px;
       height: 40px;
-      background: url('https://i.imgur.com/QKpYwZp.png') no-repeat center center;
-      background-size: contain;
-      animation: fly 10s linear infinite;
-      opacity: 0.8;
+      pointer-events: none;
+      animation: fly linear forwards;
+      z-index: 999;
+    }
+
+    .butterfly .wing-left,
+    .butterfly .wing-right {
+      position: absolute;
+      width: 22px;
+      height: 28px;
+      background: radial-gradient(circle at 60% 40%, #ff9de2, #ff4dac);
+      border-radius: 50% 50% 40% 60% / 60% 50% 50% 40%;
+      top: 0;
+      opacity: 0.85;
+      animation: flap 0.35s ease-in-out infinite alternate;
+      transform-origin: right center;
+    }
+
+    .butterfly .wing-right {
+      left: 26px;
+      transform: scaleX(-1);
+      animation-direction: alternate-reverse;
+      transform-origin: left center;
+    }
+
+    .butterfly .body {
+      position: absolute;
+      width: 6px;
+      height: 26px;
+      background: #c2185b;
+      border-radius: 50%;
+      left: 50%;
+      top: 2px;
+      transform: translateX(-50%);
+    }
+
+    @keyframes flap {
+      from { transform: rotateY(0deg) scaleY(1); }
+      to   { transform: rotateY(60deg) scaleY(0.85); }
     }
 
     @keyframes fly {
-      0% {
-        transform: translateY(100vh) translateX(0);
-      }
-      100% {
-        transform: translateY(-100vh) translateX(50vw);
-      }
+      0%   { transform: translateY(0)   translateX(0); opacity: 1; }
+      100% { transform: translateY(-110vh) translateX(30vw); opacity: 0; }
     }
 
+    /* ── sparkles ── */
     .sparkle {
       position: absolute;
       width: 4px;
@@ -123,10 +156,10 @@
       On this special day, I just want to tell you how much you mean to me.  
       Your love is the foundation that made me who I am.  
       Every hug, every word, every sacrifice you've made—  
-      they’ve shaped my world in the most beautiful way.
+      they've shaped my world in the most beautiful way.
     </p>
     <p>
-      I hope today brings you as much joy as you’ve brought into my life.  
+      I hope today brings you as much joy as you've brought into my life.  
       You are my guiding light, my constant strength, and my biggest blessing.  
       May your birthday be filled with peace, love, and endless happiness.
     </p>
@@ -187,20 +220,35 @@
   setInterval(drawConfetti, 30);
 </script>
 
-<!-- Butterflies -->
+<!-- CSS Butterflies on letter reveal -->
 <script>
+  function createButterfly() {
+    const b = document.createElement('div');
+    b.className = 'butterfly';
+    b.innerHTML = `
+      <div class="wing-left"></div>
+      <div class="wing-right"></div>
+      <div class="body"></div>
+    `;
+    // Random start position along bottom
+    b.style.left = (Math.random() * 90) + 'vw';
+    b.style.top  = '95vh';
+    // Random duration between 5s–10s
+    const dur = (5 + Math.random() * 5).toFixed(1) + 's';
+    b.style.animationDuration = dur;
+    // Random wing color
+    const hue = Math.floor(Math.random() * 60 + 300); // pinks/purples
+    b.querySelectorAll('.wing-left, .wing-right').forEach(w => {
+      w.style.background = `radial-gradient(circle at 60% 40%, hsl(${hue},100%,80%), hsl(${hue},80%,55%))`;
+    });
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), parseFloat(dur) * 1000 + 500);
+  }
+
   function revealLetter() {
     document.getElementById('letter').style.display = 'block';
-
-    // Release butterflies
     for (let i = 0; i < 12; i++) {
-      const b = document.createElement('div');
-      b.className = 'butterfly';
-      b.style.left = Math.random() * window.innerWidth + 'px';
-      b.style.top = window.innerHeight + 'px';
-      b.style.animationDuration = (6 + Math.random() * 5) + 's';
-      document.body.appendChild(b);
-      setTimeout(() => b.remove(), 10000);
+      setTimeout(createButterfly, i * 200);
     }
   }
 </script>
